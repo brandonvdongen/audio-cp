@@ -1,5 +1,6 @@
 <?php
 require_once("php/session.php");
+require_once("php/auth.php");
 ?>
 <!DOCTYPE html>
 <html lang="nl">
@@ -21,10 +22,9 @@ if ($_SESSION["loggedin"] == false) {
     echo '<a href="php/logout.php">logout</a>';
     echo '<br>';
     echo "Permissions:";
-    echo '<br>';
-    echo 'see_all:' . $_SESSION["perm:see_all"];
-    echo '<br>';
-    echo 'edit_all:' . $_SESSION["perm:edit_all"];
+    echo "<pre>";
+    get_permission();
+    echo "</pre>";
 
 }
 ?>

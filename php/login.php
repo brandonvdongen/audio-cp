@@ -4,35 +4,38 @@ require_once("session.php");
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once("auth.php");
 
-    $stmt = $conn->prepare("
-SELECT users.id_users, users.username, users.nickname, users.password, permissions.edit_all, permissions.see_all 
-FROM users 
-INNER JOIN permissions 
-ON users.id_users=permissions.id_permissions 
-WHERE username = ?");
-
-    $stmt->bind_param("s", $username);
-
     $username = $_POST["name"];
     $password = $_POST["password"];
+    $login_id=0;
+    $login_user="guest";
+    $login_nick="guest";
+    $login_password="";
+
+    $stmt = $conn->prepare("
+SELECT id_users, username, nickname, password
+FROM users 
+WHERE username = ?");
+
+    $stmt->bindparam(1, $username, PDO::PARAM_STR);
 
     $stmt->execute();
-    $stmt->bind_result($login_id, $login_user, $login_nick, $login_password, $login_edit_all, $login_see_all);
-    $stmt->fetch();
+    $result=$stmt->fetch(PDO::FETCH_ASSOC);
+    $login_id=$result["id_users"];
+    $login_user=$result["username"];
+    $login_nick=$result["nickname"];
+    $login_password=$result["password"];
 
     if (password_verify($password, $login_password)) {
         $_SESSION["loggedin"] = true;
+        $_SESSION["id_users"] = $login_id;
         $_SESSION["username"] = $login_user;
         $_SESSION["nickname"] = $login_nick;
-        $_SESSION["id_user"] = $login_id;
-        $_SESSION["perm:edit_all"] = $login_edit_all;
-        $_SESSION["perm:see_all"] = $login_see_all;
         header("Location: ../index.php");
     } else {
         echo "user not found!";
     }
 
-    $stmt->close();
+    $stmt->closeCursor();
 
 }
 
