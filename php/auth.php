@@ -18,5 +18,5 @@ function get_permission(){
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    print_r($result);
+    return $result;
 }

@@ -23,7 +23,7 @@ if ($_SESSION["loggedin"] == false) {
     echo '<br>';
     echo "Permissions:";
     echo "<pre>";
-    get_permission();
+    print_r(get_permission());
     echo "</pre>";
 
 }
