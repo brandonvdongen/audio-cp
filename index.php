@@ -22,9 +22,9 @@ if ($_SESSION["loggedin"] == false) {
     echo '<br>';
     echo "Permissions:";
     echo '<br>';
-    echo 'see_all:'.$_SESSION["perm:see_all"];
+    echo 'see_all:' . $_SESSION["perm:see_all"];
     echo '<br>';
-    echo 'edit_all:'.$_SESSION["perm:edit_all"];
+    echo 'edit_all:' . $_SESSION["perm:edit_all"];
 
 }
 ?>
