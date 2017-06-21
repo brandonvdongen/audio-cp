@@ -17,7 +17,7 @@ WHERE username = ?");
     $password = $_POST["password"];
 
     $stmt->execute();
-    $stmt->bind_result($login_id, $login_user, $login_nick, $login_password,$login_edit_all,$login_see_all);
+    $stmt->bind_result($login_id, $login_user, $login_nick, $login_password, $login_edit_all, $login_see_all);
     $stmt->fetch();
 
     if (password_verify($password, $login_password)) {
@@ -25,8 +25,8 @@ WHERE username = ?");
         $_SESSION["username"] = $login_user;
         $_SESSION["nickname"] = $login_nick;
         $_SESSION["id_user"] = $login_id;
-        $_SESSION["perm:edit_all"]=$login_edit_all;
-        $_SESSION["perm:see_all"]=$login_see_all;
+        $_SESSION["perm:edit_all"] = $login_edit_all;
+        $_SESSION["perm:see_all"] = $login_see_all;
         header("Location: ../index.php");
     } else {
         echo "user not found!";
