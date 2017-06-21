@@ -7,7 +7,7 @@ class AuthController {
     private $mysqli = null;
 
     public function __construct($oMysqliConn) {
-        if($oMysqliConn)instanceof mysqli)
+        if($oMysqliConn instanceof mysqli)
             throw new Exception("Private profide a mysqli object");
         $this->mysqli = $oMysqliConn;
 
