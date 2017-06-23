@@ -8,7 +8,7 @@ function stop(){
 }
 function load_id(id){
     console.log("load",id);
-    Post("lsl/control.php","load_id=".id,function(e){
+    Post("lsl/control.php","load_id="+id,function(e){
         console.log(e.response);
     });
 }

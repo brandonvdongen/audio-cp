@@ -2,10 +2,11 @@
 require_once("php/session.php");
 require_once("php/classes.php");
 $auth = new auth();
+if (!$auth->get_id()) {
+    header('Location: pages/login.php');
+    exit();
+}
 $perms = $auth->get_permissions();
-echo "<pre>";
-print_r($perms);
-echo "</pre>";
 ?>
 <!DOCTYPE html>
 <html lang="nl">
@@ -22,7 +23,7 @@ echo "</pre>";
 
 <body>
 <?php
-echo 'logged in as: ' . $_SESSION["nickname"];
+echo 'logged in as: ' . $auth->get_nickname();
 echo '<br>';
 echo '<a href="php/logout.php">logout</a>';
 echo '<hr>';
@@ -35,7 +36,9 @@ echo '<hr>';
         <th>
             author
         </th>
-        <th>owner</th>
+        <th>
+            owner
+        </th>
     </tr>
     <?php
     require_once("php/songlist.php");

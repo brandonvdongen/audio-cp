@@ -1,6 +1,9 @@
 <?php
 require_once("../php/session.php");
 require_once("../php/classes.php");
+require_once("../php/post.php");
+$database = new database();
+$auth = new auth();
 
 $control_config = parse_ini_file("version.ini");
 $control_version = $control_config["version"];
@@ -12,31 +15,26 @@ function reply($text)
     $output[] = $text;
 }
 
-if (stristr($_SERVER["HTTP_USER_AGENT"],"second life")) {
+if (stristr($_SERVER["HTTP_USER_AGENT"], "second life")) {
     if ($_POST["version"] != $control_version) {
         echo "INCOMPATIBLE_VERSION";
         exit();
     }
 
     if ($_POST["status"] == "LINK_REQUEST") {
-        $stmt = $conn->prepare("SELECT * FROM users WHERE users.uuid=?");
-        $stmt->bindValue(1, $_SERVER["HTTP_X_SECONDLIFE_OWNER_KEY"]);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        $result = $database->prepared_query("SELECT * FROM users WHERE users.uuid=?", [$_SERVER["HTTP_X_SECONDLIFE_OWNER_KEY"]]);
         if (!$result) {
             $password = substr(md5(rand()), 0, 7);
             $control_db_password = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $conn->prepare("INSERT INTO users(username, nickname, password, uuid) VALUES (?,?,?,?);");
-            $stmt->bindValue(1, $_SERVER["HTTP_X_SECONDLIFE_OWNER_NAME"]);
-            $stmt->bindValue(2, $_SERVER["HTTP_X_SECONDLIFE_OWNER_NAME"]);
-            $stmt->bindValue(3, $control_db_password);
-            $stmt->bindValue(4, $_SERVER["HTTP_X_SECONDLIFE_OWNER_KEY"]);
-            $exec1 = $stmt->execute();
-            $stmt = $conn->prepare("INSERT INTO permissions(id_users) VALUES (LAST_INSERT_ID());");
-            $exec2 = $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_OBJ);
-
-            if ($exec1 && $exec2) {
+            $result = $database->prepared_query("INSERT INTO users(username, nickname, password, uuid) VALUES (?,?,?,?);",
+                [
+                    $_SERVER["HTTP_X_SECONDLIFE_OWNER_NAME"],
+                    $_SERVER["HTTP_X_SECONDLIFE_OWNER_NAME"],
+                    $control_db_password,
+                    $_SERVER["HTTP_X_SECONDLIFE_OWNER_KEY"]
+                ]);
+            $result = $database->prepared_query("INSERT INTO permissions(id_users) VALUES (LAST_INSERT_ID());", []);
+            if ($result) {
                 reply("ACCOUNT_CREATED");
                 reply("TEMP_PASSWORD");
                 reply($password);
@@ -46,12 +44,25 @@ if (stristr($_SERVER["HTTP_USER_AGENT"],"second life")) {
             }
 
         } else {
+            $url = $_POST["url"];
+            $database->prepared_query("UPDATE users SET link = ? WHERE users.uuid = ?", [$url, $result->uuid]);
             reply("ACCOUNT_FOUND");
             reply($result->uuid);
+            reply("UPDATE users SET link = '$url' WHERE users.uuid = $result->uuid");
         }
     }
-}else{
-    echo "nothing to see here";
+} else {
+    if (isset($_POST["load_id"])) {
+        $load_id = $_POST["load_id"];
+        $url = $database->prepared_query("SELECT link FROM users WHERE id_user=?", [$auth->get_id()]);
+        $song = $database->prepared_query("SELECT users.uuid as owner, song_name, song_author, song_data FROM songs INNER JOIN users ON songs.id_owner=users.id_user WHERE id_song=?", [$load_id]);
+
+        httpPost($url->link, "LOAD_SONG|uploader|".$song->owner."|song_name|".$song->song_name."|song_author|".$song->song_author."|load_song|".str_replace(array("\n","\r"),array("|"),$song->song_data)."|load_eol|", function ($e) {
+            reply($e);
+        });
+
+
+    }
 }
 
 echo implode("|", $output);
