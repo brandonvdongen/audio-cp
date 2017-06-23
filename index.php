@@ -1,6 +1,8 @@
 <?php
 require_once("php/session.php");
-require_once("php/auth.php");
+if ($_SESSION["loggedin"] == false) {
+    header("Location: pages/login.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="nl">
@@ -14,20 +16,25 @@ require_once("php/auth.php");
 
 <body>
 <?php
-if ($_SESSION["loggedin"] == false) {
-    echo '<a href="php/login.php">login</a>';
-} else {
-    echo 'logged in as: ' . $_SESSION["nickname"];
-    echo '<br>';
-    echo '<a href="php/logout.php">logout</a>';
-    echo '<br>';
-    echo "Permissions:";
-    echo "<pre>";
-    print_r(get_permission());
-    echo "</pre>";
-
-}
+echo 'logged in as: ' . $_SESSION["nickname"];
+echo '<br>';
+echo '<a href="php/logout.php">logout</a>';
+echo '<hr>';
 ?>
+<table id="songlist">
+    <tr>
+        <th>
+            name
+        </th>
+        <th>
+            author
+        </th>
+        <th>owner</th>
+    </tr>
+    <?php
+    require_once("php/songlist.php");
+    ?>
+</table>
 </body>
 
 </html>
