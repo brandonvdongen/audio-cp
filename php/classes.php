@@ -103,32 +103,32 @@ class song
         $this->data = $data;
     }
 
-    public function getid()
+    public function get_id()
     {
         return $this->id;
     }
 
-    public function getname()
+    public function get_name()
     {
         return $this->name;
     }
 
-    public function getowner()
+    public function get_owner()
     {
         return $this->owner;
     }
 
-    public function getownerid()
+    public function get_owner_id()
     {
         return $this->idowner;
     }
 
-    public function getauthor()
+    public function get_author()
     {
         return $this->author;
     }
 
-    public function getdata()
+    public function get_data()
     {
         return $this->data;
     }
@@ -148,7 +148,6 @@ class song
         return "loading";
     }
 }
-
 
 class songfinder
 {
