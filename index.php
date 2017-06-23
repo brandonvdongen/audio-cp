@@ -1,8 +1,11 @@
 <?php
 require_once("php/session.php");
-if ($_SESSION["loggedin"] == false) {
-    header("Location: pages/login.php");
-}
+require_once("php/classes.php");
+$auth = new auth();
+$perms = $auth->get_permissions();
+echo "<pre>";
+print_r($perms);
+echo "</pre>";
 ?>
 <!DOCTYPE html>
 <html lang="nl">

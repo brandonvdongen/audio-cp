@@ -2,9 +2,8 @@
 require_once(__DIR__ . "/session.php");
 require_once(__DIR__ . "/classes.php");
 
-$id_users = $_SESSION["id_users"];
-
-$perm = get_permissions();
+$auth = new auth();
+$perms=$auth->get_permissions();
 
 foreach ($songs as $i => $song) {
     echo "<tr class='song-entry'>\n";

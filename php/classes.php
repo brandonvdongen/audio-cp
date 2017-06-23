@@ -6,7 +6,6 @@ class database
     private $user;
     private $pass;
     private $database;
-    private $result;
 
     public function __construct()
     {
@@ -21,7 +20,7 @@ class database
     {
         $stmt = $this->conn->prepare($query);
         foreach ($bindings as $i => $bind) {
-            $stmt->bindValue($i, $bind);
+            $stmt->bindValue(($i + 1), $bind);
         }
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_OBJ);
@@ -32,40 +31,56 @@ class auth
 {
     const SESSION_VAR = "id_user";
     private $database;
+    private $id_user;
+    private $username;
 
     public function __construct()
     {
 
         $this->database = new database();
         if (isset($_SESSION[self::SESSION_VAR])) {
-            $this->verify_login($_SESSION[self::SESSION_VAR]);
+            $this->id_user = $_SESSION[self::SESSION_VAR];
+            $this->verify_login();
+        } else {
+            unset($this->id_user);
+            unset($_SESSION[self::SESSION_VAR]);
         }
     }
 
-    public function verify_login($id)
+    public function login($username, $password)
     {
-        if (!is_numeric($id)) {
+        $result = $this->database->prepared_query("SELECT * FROM users WHERE username=?", [$username]);
+        if (password_verify($password, $result->password)) {
+            $this->id_user = $result->id_user;
+            $this->username = $result->username;
+            $_SESSION[self::SESSION_VAR] = $result->id_user;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function verify_login()
+    {
+        if (!is_numeric($id = $this->id_user)) {
             return false;
         } else {
-
-            $this->database->prepared_query("SELECT * FROM users where users.username");
+            if ($this->database->prepared_query('SELECT id_user FROM users WHERE users.id_user=?', [$this->id_user])) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
-    public function set_id($id_user)
+    public function get_permissions()
     {
-        $this->id_user = $id_user;
+        return $this->database->prepared_query("SELECT users.id_user, users.nickname, permissions.see_all, permissions.edit_all, permissions.remove_all FROM permissions INNER JOIN users ON users.id_user=permissions.id_permissions WHERE users.id_user=?", [$this->id_user]);
     }
 
-    public
-    function get_permissions()
+    public function get_id()
     {
-        $conn = new database();
-        $stmt = $conn->prepare("SELECT * FROM permissions INNER JOIN users ON users.id_user=permissions.id_permissions WHERE users.id_user=?");
-        $stmt->bindValue(1, $this->id_user);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_OBJ);
-        return $result;
+        return $this->id_user;
     }
 }
 
@@ -135,20 +150,28 @@ class song
 }
 
 
-//class songfinder
-//{
-//    function __construct()
-//    {
-//        if ($perm->see_all == 1) {
-//            $stmt = $conn->prepare("SELECT songs.id_songs, users.id_user AS id_owner, users.username AS song_owner, songs.song_name, songs.song_author, songs.song_data FROM songs INNER JOIN users ON users.id_user=songs.id_owner");
-//        } else {
-//            $stmt = $conn->prepare("SELECT songs.id_songs, users.id_user AS id_owner, users.username AS song_owner, songs.song_name, songs.song_author, songs.song_data FROM songs INNER JOIN users ON users.id_user=songs.id_owner WHERE public=1 OR id_owner=?");
-//        }
-//        $stmt->bindValue(1, $id_user);
-//        $stmt->execute();
-//        $songs = array();
-//        while ($result = $stmt->fetch(PDO::FETCH_OBJ)) {
-//            $songs[$result->id_songs] = new song($result->id_songs, $result->id_owner, $result->song_owner, $result->song_name, $result->song_author, $result->song_data);
-//        }
-//    }
-//}
+class songfinder
+{
+    private $auth;
+
+    public function get_songs($auth)
+    {
+        if (!($auth instanceof auth)) {
+            return false;
+        } else {
+            $this->auth = $auth;
+            $perms = $this->auth->get_permissions();
+            $database = new database();
+            if ($perms->see_all == 1) {
+                $result = $database->prepared_query("SELECT songs.id_song, users.id_user AS id_owner, users.username AS song_owner, songs.song_name, songs.song_author, songs.song_data FROM songs INNER JOIN users ON users.id_user=songs.id_owner",[]);
+            } else {
+                $result = $database->prepared_query("SELECT songs.id_song, users.id_user AS id_owner, users.username AS song_owner, songs.song_name, songs.song_author, songs.song_data FROM songs INNER JOIN users ON users.id_user=songs.id_owner WHERE public=1 OR id_owner=?", [$this->auth->get_id()]);
+            }
+            $songs = $result;
+            foreach ($result as $song) {
+                $songs[$song->id_songs] = new song($result->id_songs, $result->id_owner, $result->song_owner, $result->song_name, $result->song_author, $result->song_data);
+            }
+            return $songs;
+        }
+    }
+}
