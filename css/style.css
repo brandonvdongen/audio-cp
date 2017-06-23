@@ -1,6 +1,32 @@
 
 body{
-    background-color:steelblue;
+    background-color: #647687;
     margin:0;
     padding:0;
+}
+
+button {
+    padding: 0 1rem;
+    height: 2.125rem;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #ffffff;
+    border: 1px #d9d9d9 solid;
+    color: #262626;
+    cursor: pointer;
+    display: inline-block;
+    outline: none;
+    font-size: .875rem;
+    line-height: 100%;
+    margin: .15625rem 0;
+    position: relative;
+}
+
+button:disabled, button.disabled {
+    border: 1px #d9d9d9 solid;
+    /*background-color: #eaeaea;*/
+    color: #ffffff;
+    cursor: default;
+    background: lightgrey linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent) !important;
+    background-size: 40px 40px !important;
 }

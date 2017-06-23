@@ -1,5 +1,6 @@
 <?php
-session_start("audio-cp");
+session_name("audio-cp");
+session_start();
 
 if (!isset($_SESSION["loggedin"])) {
     $_SESSION["loggedin"] = false;

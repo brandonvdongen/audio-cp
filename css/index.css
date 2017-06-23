@@ -1,0 +1,10 @@
+#songlist{
+    background-color: #e8f1f4;
+    width:100vw;
+    border-collapse: collapse;
+}
+.song-entry {
+    border: 1px solid black;
+    box-sizing: border-box;
+    text-align:center;
+}

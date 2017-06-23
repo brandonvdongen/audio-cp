@@ -11,7 +11,7 @@ if ($_SESSION["loggedin"] == false) {
     <meta charset="utf-8">
     <title>opgave x</title>
     <link href="css/style.css" rel="stylesheet" type="text/css">
-    <link href="css/home.css" rel="stylesheet" type="text/css">
+    <link href="css/index.css" rel="stylesheet" type="text/css">
     <script src="js/song_controls.js"></script>
     <script src="js/post.js"></script>
     <script src="js/functions.js"></script>
