@@ -15,21 +15,21 @@ $stmt->bindValue(1, $id_users);
 $stmt->execute();
 $songs = array();
 while ($result = $stmt->fetch(PDO::FETCH_OBJ)) {
-    $songs[] = new song($result->id_songs, $result->id_owner, $result->song_owner, $result->song_name, $result->song_author, $result->song_data);
+    $songs[$result->id_songs] = new song($result->id_songs, $result->id_owner, $result->song_owner, $result->song_name, $result->song_author, $result->song_data);
 }
 foreach ($songs as $i => $song) {
     echo "<tr class='song-entry'>\n";
     echo "<td>{$song->getname()}</td>\n";
     echo "<td>{$song->getauthor()}</td>\n";
     echo "<td>{$song->getowner()}</td>\n";
-    echo "<td><button onclick='load_id({$song->load_song()})'>Load</button></td>\n";
+    echo "<td><button onclick='load_id($i)'>Load</button></td>\n";
     if ($song->getownerid() == $id_users || $perm->edit_all) {
-        echo "<td><button onclick='edit_id({$song->getid()})'>edit</button></td>\n";
+        echo "<td><button onclick='edit_id($i)'>edit</button></td>\n";
     } else {
         echo "<td><button disabled>edit</button></td>\n";
     }
     if ($song->getownerid() == $id_users || $perm->remove_all) {
-        echo "<td><button onclick='delete_id({$song->getid()})'>delete</button></td>\n";
+        echo "<td><button onclick='delete_id($i)'>delete</button></td>\n";
     } else {
         echo "<td><button disabled>delete</button></td>\n";
     }
