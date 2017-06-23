@@ -2,19 +2,10 @@
 require_once("../php/session.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once("../php/auth.php");
+    require_once("../php/classes.php");
+    $login = new auth($_POST["name"],$_POST["password"]);
 
-    $username = $_POST["name"];
-    $password = $_POST["password"];
-    $login_id = 0;
-    $login_user = "guest";
-    $login_nick = "guest";
-    $login_password = "";
 
-    $stmt = $conn->prepare("
-SELECT id_users, username, nickname, password
-FROM users 
-WHERE username = ?");
 
     $stmt->bindparam(1, $username, PDO::PARAM_STR);
 

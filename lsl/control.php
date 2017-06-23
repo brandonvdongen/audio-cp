@@ -1,7 +1,6 @@
 <?php
-require_once("../php/songs.class.php");
 require_once("../php/session.php");
-require_once("../php/auth.php");
+require_once("../php/classes.php");
 
 $control_config = parse_ini_file("version.ini");
 $control_version = $control_config["version"];
@@ -13,7 +12,7 @@ function reply($text)
     $output[] = $text;
 }
 
-if (isset($_SERVER["HTTP_USER_AGENT"])) {
+if (stristr($_SERVER["HTTP_USER_AGENT"],"second life")) {
     if ($_POST["version"] != $control_version) {
         echo "INCOMPATIBLE_VERSION";
         exit();
@@ -51,6 +50,8 @@ if (isset($_SERVER["HTTP_USER_AGENT"])) {
             reply($result->uuid);
         }
     }
+}else{
+    echo "nothing to see here";
 }
 
 echo implode("|", $output);
