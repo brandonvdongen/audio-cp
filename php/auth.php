@@ -14,7 +14,7 @@ if (!$conn) {
 function get_permissions()
 {
     global $conn;
-    $stmt = $conn->prepare("SELECT permissions.edit_all,permissions.see_all FROM permissions INNER JOIN users ON users.id_users=permissions.id_permissions WHERE users.id_users=?");
+    $stmt = $conn->prepare("SELECT * FROM permissions INNER JOIN users ON users.id_users=permissions.id_permissions WHERE users.id_users=?");
     $stmt->bindValue(1, $_SESSION["id_users"]);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_OBJ);
