@@ -14,20 +14,31 @@
 }
 #login_form .before{
     box-shadow: -1px 6px 6px -6px rgba(0, 0, 0, 0.35);
-    content:"";
     display:block;
     height:50px;
-    background-color:#1ba1e2;
+    background-color: #1ba1e2;
     width:100%;
-    margin-bottom:50px;
+    margin-bottom: 5px;
+    top: -1px;
+    position: relative;
+}
+#login_form .before p{
+    color:white;
+    font-size: 30px;
+    font-weight:bolder;
+    margin: 8px;
+    margin-left: 10px;
+    text-align: center;
 }
 #login_form .after{
     content:"";
     display:block;
     height:50px;
-    background-color:#1ba1e2;
+    background-color: #1ba1e2;
     width:100%;
     margin-top:5px;
+    position: relative;
+    bottom: -1px;
 }
 #login_form input{
     width: 380px;

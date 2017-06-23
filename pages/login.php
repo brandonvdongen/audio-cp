@@ -52,7 +52,7 @@ WHERE username = ?");
 
 <body>
 <form method="post" action="" id="login_form">
-    <div class="before"></div>
+    <div class="before"><p>CONTROL PANEL LOGIN</p></div>
     <?php
     if (isset($error)) {
         echo "<p id=\"error\">$error</p>";

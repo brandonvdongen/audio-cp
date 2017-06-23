@@ -57,11 +57,14 @@ class song
 
     public function play()
     {
-        echo "playing...";
+        return "playing";
     }
 
     public function stop()
     {
-        echo "stopping...";
+        return "stopping";
+    }
+    public function load_song(){
+        return "loading";
     }
 }

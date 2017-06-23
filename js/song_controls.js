@@ -6,7 +6,7 @@ function play(){
 function stop(){
     console.log("stop");
 }
-function load_id(id){
+function load_song(id){
     console.log("load",id);
 }
 function edit_id(id){
