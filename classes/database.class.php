@@ -9,7 +9,7 @@ class Database
 
     public function __construct()
     {
-        $auth_config = parse_ini_file("auth.ini");
+        $auth_config = parse_ini_file("../config/auth.ini");
         $this->user = $auth_config["username"];
         $this->pass = $auth_config["password"];
         $this->database = $auth_config["database"];

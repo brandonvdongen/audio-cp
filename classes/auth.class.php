@@ -8,10 +8,11 @@ class Auth
     private $username;
     private $nickname;
 
-    public function __construct()
+    public function __construct($database)
     {
 
-        $this->database = new database();
+
+        $this->database = $database;
         if (isset($_SESSION[self::SESSION_VAR])) {
             $this->id_user = $_SESSION[self::SESSION_VAR];
             $this->verify_login();
