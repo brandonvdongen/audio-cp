@@ -16,7 +16,7 @@ class database
         $this->conn = new PDO("mysql:host=localhost;dbname=$this->database", $this->user, $this->pass);
     }
 
-    public function prepared_query($statement, $bindings)
+    public function prepared_query($statement, $bindings=[])
     {
         $stmt = $this->conn->prepare($statement);
         foreach ($bindings as $i => $bind) {
@@ -84,10 +84,10 @@ class auth
         $result = $this->database->prepared_query("SELECT * FROM users WHERE username=?", [$username]);
         if ($result) {
             if (password_verify($password, $result->password)) {
+                $_SESSION[self::SESSION_VAR] = $result->id_user;
                 $this->id_user = $result->id_user;
                 $this->username = $result->username;
                 $this->nickname = $result->nickname;
-                $_SESSION[self::SESSION_VAR] = $result->id_user;
                 return true;
             } else {
                 return false;

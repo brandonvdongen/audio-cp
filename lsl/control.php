@@ -57,7 +57,7 @@ if (stristr($_SERVER["HTTP_USER_AGENT"], "second life")) {
         $url = $database->prepared_query("SELECT link FROM users WHERE id_user=?", [$auth->get_id()]);
         $song = $database->prepared_query("SELECT users.uuid as owner, song_name, song_author, song_data FROM songs INNER JOIN users ON songs.id_owner=users.id_user WHERE id_song=?", [$load_id]);
 
-        httpPost($url->link, "LOAD_SONG|uploader|".$song->owner."|song_name|".$song->song_name."|song_author|".$song->song_author."|load_song|".str_replace(array("\n","\r"),array("|"),$song->song_data)."|load_eol|", function ($e) {
+        httpPost($url->link, "LOAD_SONG|uploader|".$song->owner."|song_name|".$song->song_name."|song_author|".$song->song_author."|".str_replace(array("\n","\r"),array("|"),$song->song_data), function ($e) {
             reply($e);
         });
 

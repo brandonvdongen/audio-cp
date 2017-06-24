@@ -5,6 +5,8 @@ $auth = new auth();
 if (!$auth->get_id()) {
     header('Location: pages/login.php');
     exit();
+}else{
+    $auth->verify_login();
 }
 $perms = $auth->get_permissions();
 ?>
