@@ -5,7 +5,7 @@ require_once("../php/post.php");
 $database = new database();
 $auth = new auth();
 
-$control_config = parse_ini_file("version.ini");
+$control_config = parse_ini_file("../config/version.ini");
 $control_version = $control_config["version"];
 
 $output = [];
