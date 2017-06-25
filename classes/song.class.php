@@ -48,19 +48,4 @@ class Song
     {
         return $this->data;
     }
-
-    public function play()
-    {
-        return "playing";
-    }
-
-    public function stop()
-    {
-        return "stopping";
-    }
-
-    public function load_song()
-    {
-        return "loading";
-    }
 }

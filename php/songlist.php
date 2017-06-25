@@ -1,10 +1,14 @@
 <?php
-require_once(__DIR__ . "/session.class.php");
-require_once(__DIR__ . "/classes.php");
+require_once("../classes/session.class.php");
+require_once("../classes/database.class.php");
+require_once("../classes/auth.class.php");
+require_once("../classes/songfinder.class.php");
+require_once("../classes/song.class.php");
 
-$auth = new auth();
+$database = new Database();
+$auth = new Auth($database);
 $perms=$auth->get_permissions();
-$songfinder = new songfinder($auth);
+$songfinder = new Songfinder($auth,$database);
 $songs = $songfinder->get_songs();
 foreach ($songs as $i => $song) {
     echo "<tr class='song-entry'>\n";

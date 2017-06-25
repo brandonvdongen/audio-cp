@@ -1,9 +1,11 @@
 <?php
-require_once("../php/session.class.php");
+require_once("../classes/session.class.php");
+require_once("../classes/database.class.php");
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once("../classes/auth.class.php");
-    $auth = new Auth;
+    $database= new Database();
+    $auth = new Auth($database);
     if ($auth->login($_POST["username"], $_POST["password"])) {
         header("Location: ../index.php");
     } else {
