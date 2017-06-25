@@ -1,5 +1,5 @@
 <?php
-require_once("php/session.php");
+require_once("classes/session.class.php");
 require_once("classes/auth.class.php");
 require_once("classes/database.class.php");
 $database= new Database();

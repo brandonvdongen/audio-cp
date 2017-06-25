@@ -1,9 +1,9 @@
 <?php
-require_once("../php/session.php");
+require_once("../php/session.class.php");
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once("../php/classes.php");
-    $auth = new auth;
+    require_once("../classes/auth.class.php");
+    $auth = new Auth;
     if ($auth->login($_POST["username"], $_POST["password"])) {
         header("Location: ../index.php");
     } else {

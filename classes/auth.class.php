@@ -1,5 +1,4 @@
 <?php
-
 class Auth
 {
     const SESSION_VAR = "id_user";
@@ -11,8 +10,12 @@ class Auth
     public function __construct($database)
     {
 
+        if($database instanceof Database) {
+            $this->database = $database;
+        }else{
+            return false;
+        }
 
-        $this->database = $database;
         if (isset($_SESSION[self::SESSION_VAR])) {
             $this->id_user = $_SESSION[self::SESSION_VAR];
             $this->verify_login();
