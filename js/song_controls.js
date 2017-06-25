@@ -1,5 +1,3 @@
-const php = "php/song_controls.js";
-
 function play(){
     console.log("play");
 }

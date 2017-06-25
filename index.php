@@ -1,9 +1,7 @@
 <?php
-require_once("classes/session.class.php");
-require_once("classes/database.class.php");
-require_once("classes/auth.class.php");
-$database= new Database();
-$auth = new Auth($database);
+require_once("php/session.php");
+require_once("php/classes.php");
+$auth = new auth();
 if (!$auth->get_id()) {
     header('Location: pages/login.php');
     exit();

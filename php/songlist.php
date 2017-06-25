@@ -1,14 +1,10 @@
 <?php
-require_once("../classes/session.class.php");
-require_once("../classes/database.class.php");
-require_once("../classes/auth.class.php");
-require_once("../classes/songfinder.class.php");
-require_once("../classes/song.class.php");
+require_once(__DIR__ . "/session.php");
+require_once(__DIR__ . "/classes.php");
 
-$database = new Database();
-$auth = new Auth($database);
+$auth = new auth();
 $perms=$auth->get_permissions();
-$songfinder = new Songfinder($auth,$database);
+$songfinder = new songfinder($auth);
 $songs = $songfinder->get_songs();
 foreach ($songs as $i => $song) {
     echo "<tr class='song-entry'>\n";
@@ -16,12 +12,12 @@ foreach ($songs as $i => $song) {
     echo "<td>{$song->get_author()}</td>\n";
     echo "<td>{$song->get_owner()}</td>\n";
     echo "<td><button onclick='load_id($i)'>Load</button></td>\n";
-    if ($song->get_owner_id() == $auth->get_id() || $perm->edit_all) {
+    if ($song->get_owner_id() == $auth->get_id() || $perms->edit_all) {
         echo "<td><button onclick='edit_id($i)'>edit</button></td>\n";
     } else {
         echo "<td><button disabled>edit</button></td>\n";
     }
-    if ($song->get_owner_id() == $auth->get_id() || $perm->remove_all) {
+    if ($song->get_owner_id() == $auth->get_id() || $perms->remove_all) {
         echo "<td><button onclick='delete_id($i)'>delete</button></td>\n";
     } else {
         echo "<td><button disabled>delete</button></td>\n";
