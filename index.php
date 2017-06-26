@@ -1,7 +1,9 @@
 <?php
 require_once("php/session.php");
-require_once("php/classes.php");
-$auth = new auth();
+require_once("classes/database.class.php");
+require_once("classes/auth.class.php");
+$database = new Database();
+$auth = new Auth($database);
 if (!$auth->get_id()) {
     header('Location: pages/login.php');
     exit();
@@ -30,16 +32,21 @@ echo '<br>';
 echo '<a href="php/logout.php">logout</a>';
 echo '<hr>';
 ?>
+<div>
+    <button id="play">Play</button>
+    <button id="stop">Stop</button>
+
+</div>
 <table id="songlist">
     <tr>
         <th>
-            name
+            Name
         </th>
         <th>
-            author
+            Author
         </th>
         <th>
-            owner
+            Uploader
         </th>
     </tr>
     <?php

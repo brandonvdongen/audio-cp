@@ -1,9 +1,10 @@
 <?php
 require_once("../php/session.php");
-require_once("../php/classes.php");
 require_once("../php/post.php");
-$database = new database();
-$auth = new auth();
+require_once ("../classes/database.class.php");
+require_once ("../classes/auth.class.php");
+$database = new Database();
+$auth = new Auth($database);
 
 $control_config = parse_ini_file("version.ini");
 $control_version = $control_config["version"];

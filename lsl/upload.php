@@ -1,6 +1,7 @@
 <?php
-require_once("../php/classes.php");
-$database = new database();
+require_once("../classes/database.class.php");
+
+$database = new Database();
 
 $result=$database->prepared_query("SELECT * FROM songs WHERE song_name=?",[$_POST["name"]]);
 if(isset($result->id_song)){
