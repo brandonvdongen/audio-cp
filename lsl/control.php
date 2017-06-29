@@ -6,7 +6,7 @@ require_once ("../classes/auth.class.php");
 require_once("../classes/songfinder.class.php");
 $database = new Database();
 $auth = new Auth($database);
-$songfinder = new Songfinder($auth);
+$songfinder = new Songfinder($auth,$database);
 
 $control_config = parse_ini_file("version.ini");
 $control_version = $control_config["version"];
@@ -58,10 +58,11 @@ if (stristr($_SERVER["HTTP_USER_AGENT"], "second life")) {
         $ownerkey=$_SERVER["HTTP_X_SECONDLIFE_OWNER_KEY"];
         $song = $database->prepared_query("SELECT songs.*,users.uuid AS owner FROM songs INNER JOIN users ON songs.id_owner=users.id_user WHERE CONCAT(songs.song_name,' ',songs.song_author) LIKE CONCAT('%',?,'%')",[$_POST["song"]]);
         if(is_object($song)){
-
+            $url = $database->prepared_query("SELECT link FROM users WHERE uuid=?", [$ownerkey]);
             httpPost($url->link, "LOAD_SONG|uploader|" . $song->owner . "|song_name|" . $song->song_name . "|song_author|" . $song->song_author . "|" . str_replace(array("\n", "\r"), array("|"), $song->song_data));
+            echo "song_found";
         }
-        if(is_array($result)){
+        if(is_array($song)){
             echo "multi";
         }
     }
