@@ -3,8 +3,10 @@ require_once("../php/session.php");
 require_once("../php/post.php");
 require_once ("../classes/database.class.php");
 require_once ("../classes/auth.class.php");
+require_once("../classes/songfinder.class.php");
 $database = new Database();
 $auth = new Auth($database);
+$songfinder = new Songfinder($auth);
 
 $control_config = parse_ini_file("version.ini");
 $control_version = $control_config["version"];
@@ -34,7 +36,7 @@ if (stristr($_SERVER["HTTP_USER_AGENT"], "second life")) {
                     $control_db_password,
                     $_SERVER["HTTP_X_SECONDLIFE_OWNER_KEY"]
                 ]);
-            $result = $database->prepared_query("INSERT INTO permissions(id_users) VALUES (LAST_INSERT_ID());", []);
+            $result = $database->prepared_query("INSERT INTO permissions(id_user) VALUES (LAST_INSERT_ID());", []);
             if ($result) {
                 reply("ACCOUNT_CREATED");
                 reply("TEMP_PASSWORD");
@@ -52,8 +54,21 @@ if (stristr($_SERVER["HTTP_USER_AGENT"], "second life")) {
             reply("UPDATE users SET link = '$url' WHERE users.uuid = $result->uuid");
         }
     }
+    if($_POST["status"]== "REQUEST_SONG_NAME"){
+        $ownerkey=$_SERVER["HTTP_X_SECONDLIFE_OWNER_KEY"];
+        $song = $database->prepared_query("SELECT songs.*,users.uuid AS owner FROM songs INNER JOIN users ON songs.id_owner=users.id_user WHERE CONCAT(songs.song_name,' ',songs.song_author) LIKE CONCAT('%',?,'%')",[$_POST["song"]]);
+        if(is_object($song)){
+
+            httpPost($url->link, "LOAD_SONG|uploader|" . $song->owner . "|song_name|" . $song->song_name . "|song_author|" . $song->song_author . "|" . str_replace(array("\n", "\r"), array("|"), $song->song_data));
+        }
+        if(is_array($result)){
+            echo "multi";
+        }
+    }
+    if($_POST["status"]== "REQUEST_SONG_ID"){
+        echo "id!";
+    }
 } else {
-    print_r($_POST);
     if (isset($_POST["load_id"])) {
         $load_id = $_POST["load_id"];
         $url = $database->prepared_query("SELECT link FROM users WHERE id_user=?", [$auth->get_id()]);

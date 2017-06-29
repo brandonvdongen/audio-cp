@@ -8,10 +8,10 @@ require_once("classes/song.class.php");
 $database = new Database();
 $auth = new Auth($database);
 $perms = $auth->get_permissions();
-$songfinder = new Songfinder($auth);
+$songfinder = new Songfinder($auth,$database);
 $songs = array();
 if ($songfinder instanceof Songfinder) {
-    $songs = $songfinder->get_songs($database);
+    $songs = $songfinder->get_songs();
 }
 foreach ($songs as $i => $song) {
     if ($song instanceof Song && is_numeric($i)) {
